@@ -5,6 +5,7 @@ import AddBudgetModal from './components/AddBudgetModal';
 import AddExpenseModal from './components/AddExpenseModal';
 import { useState } from 'react';
 import { useBudgets } from './contexts/BudgetContext';
+import UncategorizedBudgetCard from './components/UncategorizedBudgetCard';
 function App() {
 
   const [ showAddBudgetModal, setShowAddBudgetModal ] = useState(false);
@@ -33,16 +34,18 @@ function App() {
           alignItems: "flex-start "
         }}></div>
         {budgets.map(budget => {
-          const amount = getBudgetExpenses(budget.id).reduce((total, expense) => total + expense, 0);
-          return (<BudgetCard
-            name={budget.name}
-            amount={amount}
-            max={budget.max}
-            onAddExpenseClick={() => openAddExpenseModal(budget.id)}
-          ></BudgetCard>);
-        }
-
-        )}
+          const amount = getBudgetExpenses(budget.id).reduce((total, expense) => total + expense.amount, 0);
+          return (
+            <BudgetCard
+              key={budget.id}
+              name={budget.name}
+              amount={amount}
+              max={budget.max}
+              onAddExpenseClick={() => openAddExpenseModal(budget.id)}
+            ></BudgetCard>
+          );
+        })}
+        <UncategorizedBudgetCard />
       </Container>
       <AddBudgetModal show={showAddBudgetModal} handleClose={() => setShowAddBudgetModal(false)} />
       <AddExpenseModal show={showAddExpenseModal} handleClose={() => setShowAddExpenseModal(false)} defaultBudgetId={addExpenseModalBudgetId} />
